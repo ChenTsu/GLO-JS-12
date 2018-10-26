@@ -137,6 +137,29 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   
   
+  /////////////////   AJAX save popup form data  ///////////////////////
+ document.querySelector('.main-form').addEventListener('submit', exchangeFormData);
+  
+  /////////////////   AJAX save contact form data  ///////////////////////
+ document.getElementById('form').addEventListener('submit', exchangeFormData);
+  
+ 
+  /////////////////   AJAX save contact form data  ///////////////////////
+  function exchangeFormData(evt) {
+    evt.preventDefault();
+    evt.target.appendChild(statusMsg);
+  
+    sendFormData( new FormData(evt.target) )
+      .then(()=>{ statusMsg.innerHTML = msg.loading; })
+      .then(()=>{ statusMsg.innerHTML = msg.success; })
+      .catch(()=>{ statusMsg.innerHTML = msg.fail; });
+  
+    [].forEach.call(evt.target.getElementsByTagName('input'), (el =>{ el.value = ''; }));
+    setTimeout(()=>{
+      statusMsg.innerHTML = '';
+      evt.target.lastChild.remove(); }, 5000);
+  }
+  
   function sendFormData(data){
     return new Promise( (goodNews, badNews)=>{
       let request = new XMLHttpRequest();
@@ -157,40 +180,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
       });
     } );
   }
-  
-  /////////////////   AJAX save popup form data  ///////////////////////
-  let popupForm = document.querySelector('.main-form');
-  
-  popupForm.addEventListener('submit', evt =>{
-    evt.preventDefault();
-    popupForm.appendChild(statusMsg);
-    
-    sendFormData(popupForm)
-      .then(()=>{ statusMsg.innerHTML = msg.loading; })
-      .then(()=>{ statusMsg.innerHTML = msg.success; })
-      .catch(()=>{ statusMsg.innerHTML = msg.fail; });
-    
-    
-    [].forEach.call(popupForm.getElementsByTagName('input'), (el =>{ el.value = ''; }));
-    setTimeout(()=>{ popupForm.lastChild.remove(); }, 5000);
-  });
-  
-  
-  /////////////////   AJAX save contact form data  ///////////////////////
-  let contactForm = document.getElementById('form');
-  
-  contactForm.addEventListener('submit', evt =>{
-    evt.preventDefault();
-    contactForm.appendChild(statusMsg);
-    
-    sendFormData( new FormData(contactForm) )
-      .then(()=>{ statusMsg.innerHTML = msg.loading; })
-      .then(()=>{ statusMsg.innerHTML = msg.success; })
-      .catch(()=>{ statusMsg.innerHTML = msg.fail; });
-    
-    [].forEach.call(contactForm.getElementsByTagName('input'), (el =>{ el.value = ''; }));
-    setTimeout(()=>{ popupForm.lastChild.remove(); }, 5000);
-  });
   
   
   /////////////////   validate tel inputs  ///////////////////////
